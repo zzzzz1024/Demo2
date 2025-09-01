@@ -2,7 +2,7 @@
 // 注意: 必须使用 `$()` 而不是 `document.addEventListener('DOMContentLoaded'`, 后者会让实时修改失效
 $(() => {
   toastr.success('角色卡解析器已成功加载!', '欢迎使用!');
-  
+
   // 在浏览器环境中添加一些额外的用户提示
   if (typeof (window as any).getScriptId === 'undefined' || (window as any).getScriptId() === 'mock-script-id') {
     setTimeout(() => {

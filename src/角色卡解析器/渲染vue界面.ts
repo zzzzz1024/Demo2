@@ -10,7 +10,7 @@ function startVueApp() {
   try {
     console.log('🚀 启动Vue应用...');
     console.log('📦 使用打包的Vue库和组件');
-    
+
     // 创建路由器
     const router = createRouter({
       history: createMemoryHistory(),
@@ -20,7 +20,7 @@ function startVueApp() {
         { path: '/history', component: ParseHistoryComponent },
       ],
     });
-    
+
     // 创建并启动Vue应用
     createApp(AppComponent).use(router).mount('#app');
     console.log('✅ Vue应用启动成功');

@@ -134,7 +134,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
             // 尝试多种编码方式解码文本数据
             let textString = '';
             let decodingMethod = '';
-            
+
             // 方法1: 尝试UTF-8解码（最常见）
             try {
               textString = new TextDecoder('utf-8', { fatal: true }).decode(textBytes);
@@ -142,7 +142,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
               console.log('✅ 使用UTF-8解码成功');
             } catch (e) {
               console.log('⚠️  UTF-8解码失败，尝试其他方式...');
-              
+
               // 方法2: 尝试UTF-8解码（非严格模式）
               try {
                 textString = new TextDecoder('utf-8', { fatal: false }).decode(textBytes);
@@ -155,7 +155,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
                 }
               } catch (e2) {
                 console.log('⚠️  UTF-8非严格模式解码失败，尝试其他编码...');
-                
+
                 // 方法3: 尝试其他常见编码
                 try {
                   // 先尝试ISO-8859-1（兼容性更好）
@@ -164,7 +164,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
                   console.log('✅ 使用ISO-8859-1解码成功');
                 } catch (e3) {
                   console.log('⚠️  ISO-8859-1解码失败，尝试Latin1...');
-                  
+
                   // 方法4: 使用Latin1解码（保持字节值）
                   try {
                     textString = new TextDecoder('latin1').decode(textBytes);
@@ -172,7 +172,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
                     console.log('✅ 使用Latin1解码');
                   } catch (e4) {
                     console.log('⚠️  Latin1解码失败，使用字节直接转换...');
-                    
+
                     // 方法5: 字节直接转换（最后的选择）
                     textString = '';
                     for (let i = 0; i < textBytes.length; i++) {
@@ -191,7 +191,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
             // 检查前几个字符，判断解码是否合理
             const firstChars = textString.substring(0, 50);
             console.log(`字符串开头: "${firstChars}"`);
-            
+
             // 如果仍然包含大量乱码字符，尝试重新解码
             if (textString.includes('�') && decodingMethod !== 'Byte-to-Char') {
               console.log('⚠️  检测到替换字符，尝试字节直接转换...');
@@ -211,7 +211,7 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
                 const base64Decoded = atob(textString);
                 console.log('✅ Base64解码成功');
                 console.log(`Base64解码后长度: ${base64Decoded.length}`);
-                
+
                 // Base64解码后的数据可能仍需要UTF-8解码
                 try {
                   // 将Base64解码的字符串转换为字节数组
@@ -219,16 +219,18 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
                   for (let i = 0; i < base64Decoded.length; i++) {
                     bytes[i] = base64Decoded.charCodeAt(i);
                   }
-                  
+
                   // 尝试UTF-8解码字节数组
                   const utf8Decoded = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
-                  
+
                   // 检查UTF-8解码结果是否更好（更少的替换字符）
                   const originalReplacementCount = base64Decoded.split('�').length - 1;
                   const utf8ReplacementCount = utf8Decoded.split('�').length - 1;
-                  
-                  if (utf8ReplacementCount < originalReplacementCount || 
-                      (utf8ReplacementCount === 0 && utf8Decoded.includes('{'))) {
+
+                  if (
+                    utf8ReplacementCount < originalReplacementCount ||
+                    (utf8ReplacementCount === 0 && utf8Decoded.includes('{'))
+                  ) {
                     decodedData = utf8Decoded;
                     console.log('✅ Base64后UTF-8解码成功，使用UTF-8解码结果');
                   } else {
@@ -291,27 +293,27 @@ export function extractDataFromPng(data: Uint8Array, identifier = 'chara'): Char
 export async function parsePngFile(file: File): Promise<ParseResult> {
   try {
     console.log(`开始解析PNG文件: ${file.name}`);
-    
+
     const arrayBuffer = await file.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
-    
+
     console.log(`文件大小: ${data.length} 字节`);
-    
+
     const characterData = extractDataFromPng(data, 'chara');
-    
+
     if (characterData) {
       return {
         success: true,
         data: characterData,
         timestamp: Date.now(),
-        filename: file.name
+        filename: file.name,
       };
     } else {
       return {
         success: false,
         error: '未找到角色卡数据',
         timestamp: Date.now(),
-        filename: file.name
+        filename: file.name,
       };
     }
   } catch (error) {
@@ -319,7 +321,7 @@ export async function parsePngFile(file: File): Promise<ParseResult> {
       success: false,
       error: (error as Error).message,
       timestamp: Date.now(),
-      filename: file.name
+      filename: file.name,
     };
   }
 }
