@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SillyTavern 角色卡解析器</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 20px;
+        height: calc(100vh - 200px);
+      }
+
+      .left-panel {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .right-panel {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .upload-area {
+        border: 3px dashed #667eea;
+        border-radius: 12px;
+        padding: 40px 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: #f8f9ff;
+      }
+
+      .upload-area:hover {
+        border-color: #764ba2;
+        background: #f0f2ff;
+      }
+
+      .upload-area.dragover {
+        border-color: #4caf50;
+        background: #e8f5e8;
+        transform: scale(1.02);
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .upload-text {
+        font-size: 1.1rem;
+        color: #666;
+        margin-bottom: 15px;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .history-section {
+        margin-top: 20px;
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .history-list {
+        flex: 1;
+        overflow-y: auto;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+      }
+
+      .history-item {
+        padding: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .history-item:hover {
+        background-color: #f8f9ff;
+      }
+
+      .history-item.active {
+        background-color: #667eea;
+        color: white;
+      }
+
+      .history-info {
+        flex: 1;
+      }
+
+      .history-name {
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .history-time {
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+
+      .history-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn-small {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        background: #ff4757;
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 2px solid #e0e0e0;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        padding: 12px 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #666;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+        background: #f8f9ff;
+      }
+
+      .tab-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      .data-section {
+        margin-bottom: 25px;
+      }
+
+      .data-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #667eea;
+      }
+
+      .data-item {
+        margin-bottom: 15px;
+        padding: 12px;
+        background: #f8f9ff;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      .data-label {
+        font-weight: bold;
+        color: #555;
+        margin-bottom: 5px;
+      }
+
+      .data-value {
+        color: #333;
+        line-height: 1.5;
+      }
+
+      .editable-field {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: inherit;
+        resize: vertical;
+      }
+
+      .editable-field:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-message {
+        background: #ff4757;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 10px 0;
+        display: none;
+      }
+
+      .success-message {
+        background: #2ed573;
+        color: white;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 10px 0;
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          grid-template-columns: 1fr;
+          height: auto;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎭 SillyTavern 角色卡解析器</h1>
+        <p>借鉴前人创作，学习角色卡设计精髓</p>
+      </div>
+
+      <div class="main-content">
+        <!-- 左侧面板：上传和历史 -->
+        <div class="left-panel">
+          <!-- 上传区域 -->
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">
+              拖拽角色卡文件到此处<br />
+              或点击选择文件
+            </div>
+            <input type="file" id="fileInput" class="file-input" accept=".png,.json,.webp,.jpg,.jpeg" multiple />
+            <button class="btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
+          </div>
+
+          <div class="error-message" id="errorMessage"></div>
+          <div class="success-message" id="successMessage"></div>
+
+          <!-- 解析历史 -->
+          <div class="history-section">
+            <div class="history-header">
+              <h3>📚 解析历史</h3>
+              <button class="btn btn-small" onclick="clearHistory()">清空历史</button>
+            </div>
+            <div class="history-list" id="historyList">
+              <div style="padding: 20px; text-align: center; color: #999">暂无解析历史</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧面板：数据显示和编辑 -->
+        <div class="right-panel">
+          <div class="loading" id="loadingIndicator">
+            <div class="spinner"></div>
+            <div>正在解析角色卡...</div>
+          </div>
+
+          <div id="dataPanel" style="display: none">
+            <!-- 标签页 -->
+            <div class="tabs">
+              <button class="tab active" onclick="switchTab('basic')">基本信息</button>
+              <button class="tab" onclick="switchTab('advanced')">高级设置</button>
+              <button class="tab" onclick="switchTab('worldbook')">世界书</button>
+              <button class="tab" onclick="switchTab('regex')">正则表达式</button>
+              <button class="tab" onclick="switchTab('raw')">原始数据</button>
+            </div>
+
+            <!-- 标签页内容 -->
+            <div class="tab-content" id="tabContent">
+              <!-- 内容将通过JavaScript动态生成 -->
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+              <button class="btn" onclick="saveChanges()">💾 保存修改</button>
+              <button class="btn" onclick="exportCard()">📤 导出角色卡</button>
+              <button class="btn" onclick="duplicateCard()">📋 复制角色卡</button>
+              <button class="btn" onclick="compareCards()" id="compareBtn" style="display: none">🔄 对比角色卡</button>
+            </div>
+          </div>
+
+          <div id="welcomeMessage" style="text-align: center; padding: 40px; color: #999">
+            <div style="font-size: 3rem; margin-bottom: 20px">🎭</div>
+            <h3>欢迎使用角色卡解析器</h3>
+            <p>上传一个角色卡文件开始分析</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 引入Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

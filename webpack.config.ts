@@ -33,37 +33,17 @@ function parse_entry(script_file: string) {
   return { script: script_file };
 }
 
-function common_path(lhs: string, rhs: string) {
-  const lhs_parts = lhs.split(path.sep);
-  const rhs_parts = rhs.split(path.sep);
-  for (let i = 0; i < Math.min(lhs_parts.length, rhs_parts.length); i++) {
-    if (lhs_parts[i] !== rhs_parts[i]) {
-      return lhs_parts.slice(0, i).join(path.sep);
-    }
-  }
-  return lhs_parts.join(path.sep);
-}
-
 function glob_script_files() {
   const files: string[] = fs.globSync(`src/**/index.{ts,js}`);
 
   const results: string[] = [];
-  const handle = (file: string) => {
-    const file_dirname = path.dirname(file);
-    for (const [index, result] of results.entries()) {
-      const result_dirname = path.dirname(result);
-      const common = common_path(result_dirname, file_dirname);
-      if (common === result_dirname) {
-        return;
-      }
-      if (common === file_dirname) {
-        results.splice(index, 1, file);
-        return;
-      }
+  for (const file of files) {
+    // 排除不需要编译的目录
+    if (file.includes('角色卡分析工具')) {
+      continue; // 跳过角色卡分析工具，因为它是纯HTML+JS项目
     }
     results.push(file);
-  };
-  files.forEach(handle);
+  }
   return results;
 }
 
