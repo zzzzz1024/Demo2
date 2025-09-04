@@ -33,10 +33,25 @@ function parse_entry(script_file: string) {
   return { script: script_file };
 }
 
+<<<<<<< HEAD
+=======
+function common_path(lhs: string, rhs: string) {
+  const lhs_parts = lhs.split(path.sep);
+  const rhs_parts = rhs.split(path.sep);
+  for (let i = 0; i < Math.min(lhs_parts.length, rhs_parts.length); i++) {
+    if (lhs_parts[i] !== rhs_parts[i]) {
+      return lhs_parts.slice(0, i).join(path.sep);
+    }
+  }
+  return lhs_parts.join(path.sep);
+}
+
+>>>>>>> 4da779a200380870872b12f3b5f29b322640e2c1
 function glob_script_files() {
   const files: string[] = fs.globSync(`src/**/index.{ts,js}`);
 
   const results: string[] = [];
+<<<<<<< HEAD
   for (const file of files) {
     // 排除不需要编译的目录
     if (file.includes('角色卡分析工具')) {
@@ -44,6 +59,24 @@ function glob_script_files() {
     }
     results.push(file);
   }
+=======
+  const handle = (file: string) => {
+    const file_dirname = path.dirname(file);
+    for (const [index, result] of results.entries()) {
+      const result_dirname = path.dirname(result);
+      const common = common_path(result_dirname, file_dirname);
+      if (common === result_dirname) {
+        return;
+      }
+      if (common === file_dirname) {
+        results.splice(index, 1, file);
+        return;
+      }
+    }
+    results.push(file);
+  };
+  files.forEach(handle);
+>>>>>>> 4da779a200380870872b12f3b5f29b322640e2c1
   return results;
 }
 
@@ -259,7 +292,30 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               },
             }),
       ],
+<<<<<<< HEAD
       splitChunks: false,
+=======
+      splitChunks: {
+        chunks: 'async',
+        minSize: 20000,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        cacheGroups: {
+          vendor: {
+            name: 'vendor',
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+          },
+          default: {
+            name: 'default',
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+        },
+      },
+>>>>>>> 4da779a200380870872b12f3b5f29b322640e2c1
     },
     externals: [
       ({ context, request }, callback) => {
@@ -284,18 +340,26 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           jquery: '$',
           lodash: '_',
           toastr: 'toastr',
+<<<<<<< HEAD
+=======
+          vue: 'Vue',
+          'vue-router': 'VueRouter',
+>>>>>>> 4da779a200380870872b12f3b5f29b322640e2c1
           yaml: 'YAML',
           zod: 'z',
         };
         if (request in builtin) {
           return callback(null, 'var ' + builtin[request as keyof typeof builtin]);
         }
+<<<<<<< HEAD
         
         // 允许vue、vue-router和所有vue相关包被正常打包，不作为外部依赖
         if (request === 'vue' || request === 'vue-router' || request.startsWith('@vue/')) {
           return callback();
         }
         
+=======
+>>>>>>> 4da779a200380870872b12f3b5f29b322640e2c1
         return callback(null, 'module-import https://testingcf.jsdelivr.net/npm/' + request + '/+esm');
       },
     ],
