@@ -33,6 +33,7 @@ function parse_entry(script_file: string) {
   return { script: script_file };
 }
 
+<<<<<<< HEAD
 function glob_script_files() {
   const files: string[] = fs.globSync(`src/**/index.{ts,js}`);
 
@@ -44,6 +45,41 @@ function glob_script_files() {
     }
     results.push(file);
   }
+=======
+function common_path(lhs: string, rhs: string) {
+  const lhs_parts = lhs.split(path.sep);
+  const rhs_parts = rhs.split(path.sep);
+  for (let i = 0; i < Math.min(lhs_parts.length, rhs_parts.length); i++) {
+    if (lhs_parts[i] !== rhs_parts[i]) {
+      return lhs_parts.slice(0, i).join(path.sep);
+    }
+  }
+  return lhs_parts.join(path.sep);
+}
+
+function glob_script_files() {
+  const files: string[] = fs
+    .globSync(`src/**/index.{ts,js}`)
+    .filter(file => process.env.CI !== 'true' || !fs.readFileSync(path.join(__dirname, file)).includes('@no-ci'));
+
+  const results: string[] = [];
+  const handle = (file: string) => {
+    const file_dirname = path.dirname(file);
+    for (const [index, result] of results.entries()) {
+      const result_dirname = path.dirname(result);
+      const common = common_path(result_dirname, file_dirname);
+      if (common === result_dirname) {
+        return;
+      }
+      if (common === file_dirname) {
+        results.splice(index, 1, file);
+        return;
+      }
+    }
+    results.push(file);
+  };
+  files.forEach(handle);
+>>>>>>> 65a420c07c0b0cf2ce20acef75d96b3c37dbb21d
   return results;
 }
 
@@ -259,7 +295,30 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
               },
             }),
       ],
+<<<<<<< HEAD
       splitChunks: false,
+=======
+      splitChunks: {
+        chunks: 'async',
+        minSize: 20000,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+        cacheGroups: {
+          vendor: {
+            name: 'vendor',
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+          },
+          default: {
+            name: 'default',
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+        },
+      },
+>>>>>>> 65a420c07c0b0cf2ce20acef75d96b3c37dbb21d
     },
     externals: [
       ({ context, request }, callback) => {
@@ -284,18 +343,26 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           jquery: '$',
           lodash: '_',
           toastr: 'toastr',
+<<<<<<< HEAD
+=======
+          vue: 'Vue',
+          'vue-router': 'VueRouter',
+>>>>>>> 65a420c07c0b0cf2ce20acef75d96b3c37dbb21d
           yaml: 'YAML',
           zod: 'z',
         };
         if (request in builtin) {
           return callback(null, 'var ' + builtin[request as keyof typeof builtin]);
         }
+<<<<<<< HEAD
         
         // 允许vue、vue-router和所有vue相关包被正常打包，不作为外部依赖
         if (request === 'vue' || request === 'vue-router' || request.startsWith('@vue/')) {
           return callback();
         }
         
+=======
+>>>>>>> 65a420c07c0b0cf2ce20acef75d96b3c37dbb21d
         return callback(null, 'module-import https://testingcf.jsdelivr.net/npm/' + request + '/+esm');
       },
     ],
