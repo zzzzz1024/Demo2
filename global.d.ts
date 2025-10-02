@@ -2,6 +2,13 @@ declare module '*?raw' {
   const content: string;
   export default content;
 }
+<<<<<<< HEAD
+=======
+declare module '*?url' {
+  const content: string;
+  export default content;
+}
+>>>>>>> 0603dcbcec1e6596d397ac2f51711bb7475e04c6
 declare module '*.html' {
   const content: string;
   export default content;
@@ -12,7 +19,11 @@ declare module '*.css' {
 }
 declare module '*.vue' {
   import { DefineComponent } from 'vue';
+<<<<<<< HEAD
   const component: DefineComponent<{}, {}, any>;
+=======
+  const component: DefineComponent;
+>>>>>>> 0603dcbcec1e6596d397ac2f51711bb7475e04c6
   export default component;
 }
 
