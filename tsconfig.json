@@ -33,7 +33,11 @@
   "include": [
     "@types",
     "src",
+<<<<<<< HEAD
     "global.d.ts",
+=======
+    "*.d.ts",
+>>>>>>> a1441794e40127d7ba87fb943678b2574eff0b8b
   ],
   "exclude": [
     "**/dist/**",
