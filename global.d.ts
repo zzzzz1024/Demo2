@@ -2,17 +2,35 @@ declare module '*?raw' {
   const content: string;
   export default content;
 }
+<<<<<<< HEAD
+=======
+declare module '*?url' {
+  const content: string;
+  export default content;
+}
+>>>>>>> 863524288243b48f95f2dcf78eac2a71cc5b2777
 declare module '*.html' {
   const content: string;
   export default content;
 }
+<<<<<<< HEAD
+=======
+declare module '*.md' {
+  const content: string;
+  export default content;
+}
+>>>>>>> 863524288243b48f95f2dcf78eac2a71cc5b2777
 declare module '*.css' {
   const content: unknown;
   export default content;
 }
 declare module '*.vue' {
   import { DefineComponent } from 'vue';
+<<<<<<< HEAD
   const component: DefineComponent<{}, {}, any>;
+=======
+  const component: DefineComponent;
+>>>>>>> 863524288243b48f95f2dcf78eac2a71cc5b2777
   export default component;
 }
 
