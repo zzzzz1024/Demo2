@@ -41,6 +41,7 @@
       "isBackground": true
     },
     {
+<<<<<<< HEAD
       "label": "启用网页MCP",
       "type": "shell",
       "command": "pnpx",
@@ -84,6 +85,11 @@
       "dependsOn": [
         "开始监听源代码并编译",
         "启用网页MCP"
+=======
+      "label": "开始任务",
+      "dependsOn": [
+        "开始监听源代码并编译",
+>>>>>>> 5df9c1cb4c82b29727ec6b2114f822fb829e2164
       ]
     },
     {
