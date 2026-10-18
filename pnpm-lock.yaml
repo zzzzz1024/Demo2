@@ -1331,8 +1331,8 @@ packages:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
 
-  electron-to-chromium@1.5.458:
-    resolution: {integrity: sha512-/hIH2gRSmxrf4/X4Nw/t/Wc8PVS22l8/3HnWjWTWsTOM5dsnMUPZF/+u+yr3LqweNuTBJE1rq6qAQzKkZVwMfA==}
+  electron-to-chromium@1.5.459:
+    resolution: {integrity: sha512-4SC9HHSFjO/liAhifpdOL5hG9b4BP7/5G3y3UPZVO8trlAXr1CaUEEJL0gWK3kOcYcZrOA5rkwG45Gra/lTIgg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -2760,9 +2760,10 @@ packages:
     resolution: {integrity: sha512-SHiNtMOUGWBQJwzISiVYKu82GiV4QYGePp3odlY1tuKO7gPtphAT5R/py0fA6xtbgLL/RvtJZnU9b8s0F1q0Xg==}
     engines: {node: '>= 8.9.0'}
 
-  schema-utils@4.5.0:
-    resolution: {integrity: sha512-zJlMCZ0cAR5p/Y4oVpRoqioDMJcGxaXRrQ/4rP4WyR84vc5z/DolXdbvXeDpTwbtocDFr2rhPqHPErDCUtz2kA==}
+  schema-utils@4.6.0:
+    resolution: {integrity: sha512-q8cvkEp4bRQdWcLvB3vmxpZAlS25Hxws10nCK+rUxUfuB7e430dYZZJ5z5yAoOGBbbDtve8cUg8DFfc3ue12TA==}
     engines: {node: '>= 10.13.0'}
+    hasBin: true
 
   semver@7.8.5:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
@@ -3139,8 +3140,8 @@ packages:
       typescript:
         optional: true
 
-  watchpack@2.6.1:
-    resolution: {integrity: sha512-8mk/LnXpQAiM2xKZhTkxikwly5GhL2Z+DWiLTkMa/E1Nfv9zURhHgiFyWvM4BWqW+LjIgL2AIS7JntEUx6v3vQ==}
+  watchpack@2.6.2:
+    resolution: {integrity: sha512-67nxRd7I5uAyn+KamYsCqU30iVgCgZ4aj8ZOGzmxs7zNPuvlnoYltm6+6JkOjEcD6WVXdu1BfH+gVQs3FUuW7Q==}
     engines: {node: '>=10.13.0'}
 
   webpack-cli@6.0.1:
@@ -4107,7 +4108,7 @@ snapshots:
     dependencies:
       baseline-browser-mapping: 2.11.29
       caniuse-lite: 1.0.30001816
-      electron-to-chromium: 1.5.458
+      electron-to-chromium: 1.5.459
       node-releases: 2.0.59
       update-browserslist-db: 1.3.4(browserslist@4.29.3)
 
@@ -4490,7 +4491,7 @@ snapshots:
       es-errors: 1.3.0
       gopd: 1.2.0
 
-  electron-to-chromium@1.5.458: {}
+  electron-to-chromium@1.5.459: {}
 
   emoji-regex@8.0.0: {}
 
@@ -4700,7 +4701,7 @@ snapshots:
       jest-worker: 29.7.0
       micromatch: 4.0.8
       normalize-path: 3.0.0
-      schema-utils: 4.5.0
+      schema-utils: 4.6.0
       webpack: 5.112.0(postcss@8.5.30)(webpack-cli@6.0.1)
 
   eslint@9.39.5(jiti@2.7.0):
@@ -5443,7 +5444,7 @@ snapshots:
 
   mini-css-extract-plugin@2.10.2(webpack@5.112.0):
     dependencies:
-      schema-utils: 4.5.0
+      schema-utils: 4.6.0
       tapable: 2.3.3
       webpack: 5.112.0(postcss@8.5.30)(webpack-cli@6.0.1)
 
@@ -5461,7 +5462,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
-      schema-utils: 4.5.0
+      schema-utils: 4.6.0
       terser: 5.51.2
       webpack: 5.112.0(postcss@8.5.30)(webpack-cli@6.0.1)
     optionalDependencies:
@@ -5871,7 +5872,7 @@ snapshots:
       ajv: 6.15.0
       ajv-keywords: 3.5.2(ajv@6.15.0)
 
-  schema-utils@4.5.0:
+  schema-utils@4.6.0:
     dependencies:
       '@types/json-schema': 7.0.15
       ajv: 8.20.0
@@ -6089,7 +6090,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
-      schema-utils: 4.5.0
+      schema-utils: 4.6.0
       terser: 5.51.2
       webpack: 5.112.0(postcss@8.5.30)(webpack-cli@6.0.1)
     optionalDependencies:
@@ -6275,7 +6276,7 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       hash-sum: 2.0.0
-      watchpack: 2.6.1
+      watchpack: 2.6.2
       webpack: 5.112.0(postcss@8.5.30)(webpack-cli@6.0.1)
     optionalDependencies:
       vue: 3.5.44(typescript@6.0.0-dev.20250807)
@@ -6300,7 +6301,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.0-dev.20250807
 
-  watchpack@2.6.1:
+  watchpack@2.6.2:
     dependencies:
       graceful-fs: 4.2.11
 
@@ -6344,9 +6345,9 @@ snapshots:
       graceful-fs: 4.2.11
       mime-db: 1.54.0
       minimizer-webpack-plugin: 5.13.0(postcss@8.5.30)(webpack@5.112.0)
-      schema-utils: 4.5.0
+      schema-utils: 4.6.0
       tapable: 2.3.3
-      watchpack: 2.6.1
+      watchpack: 2.6.2
       webpack-sources: 3.6.0
     optionalDependencies:
       webpack-cli: 6.0.1(webpack@5.112.0)
